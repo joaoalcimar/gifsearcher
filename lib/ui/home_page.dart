@@ -29,6 +29,24 @@ class _HomeState extends State<Home> {
     return json.decode(response.body);
   }
 
+  Widget _createGifTable(BuildContext context, AsyncSnapshot snapshot) {
+    return GridView.builder(
+        padding: EdgeInsets.all(10.0),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 10.0,
+          mainAxisSpacing: 10.0
+        ),
+        itemCount: snapshot.data["data"].length ,
+        itemBuilder: (context,index){
+          return GestureDetector(
+            child: Image.network(snapshot.data["data"][index]["images"]["fixed_height"]["url"],
+              height: 300.0,
+              fit: BoxFit.cover,),
+          );
+        });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -59,7 +77,32 @@ class _HomeState extends State<Home> {
                     border: OutlineInputBorder()),
                 style: TextStyle(color: Colors.white, fontSize: 18.0),
                 textAlign: TextAlign.center,
-              ))
+              )
+          ),
+          Expanded(
+            child: FutureBuilder(
+              future: _getGifs(),
+              builder: (context, snapshot){
+                switch(snapshot.connectionState){
+                  case ConnectionState.waiting:
+                  case ConnectionState.none:
+                    return Container(
+                      width: 200,
+                      height: 200,
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        strokeWidth: 5.0,
+                      ),
+                    );
+                    default:
+                      if (snapshot.hasError)return Container();
+                      else return _createGifTable(context, snapshot);
+                }
+              }
+            ),
+
+          )
         ],
       ),
     );
