@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:gifsearcher/ui/gif_page.dart';
 import 'package:share/share.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -51,9 +52,9 @@ class _HomeState extends State<Home> {
         itemBuilder: (context,index){
           if (_search == null || index < snapshot.data["data"].length){
             return GestureDetector(
-              child: Image.network(snapshot.data["data"][index]["images"]["fixed_height"]["url"],
-                height: 300.0,
-                fit: BoxFit.cover,),
+              child: FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: snapshot.data["data"][index]["images"]["fixed_height"]["url"],
+              height: 300.0,
+              fit: BoxFit.cover),
               onTap: (){
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => GifPage(snapshot.data["data"][index]))
