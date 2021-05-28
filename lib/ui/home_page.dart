@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:gifsearcher/ui/gif_page.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -52,6 +53,11 @@ class _HomeState extends State<Home> {
               child: Image.network(snapshot.data["data"][index]["images"]["fixed_height"]["url"],
                 height: 300.0,
                 fit: BoxFit.cover,),
+              onTap: (){
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => GifPage(snapshot.data["data"][index]))
+                );
+              },
             );
           }else{
             return Container(
@@ -81,9 +87,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-
     _getGifs().then((map) {
-      print(map);
     });
   }
 
